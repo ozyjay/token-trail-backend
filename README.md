@@ -6,7 +6,7 @@ colorTo: green
 sdk: docker
 app_port: 7860
 suggested_hardware: cpu-basic
-short_description: Bounded next-token probability traces from a small open model
+short_description: Next-token probability traces from an open model
 ---
 
 # Token Trail backend
