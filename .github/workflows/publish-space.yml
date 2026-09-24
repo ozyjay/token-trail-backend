@@ -1,0 +1,36 @@
+name: Publish Space
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Hugging Face CLI
+        run: python3 -m pip install 'huggingface_hub[cli]>=1.19,<2'
+      - name: Prepare tracked source
+        run: |
+          mkdir -p "$RUNNER_TEMP/space-source"
+          git archive HEAD | tar -x -C "$RUNNER_TEMP/space-source"
+          rm -rf "$RUNNER_TEMP/space-source/.github"
+      - name: Publish to the Space
+        env:
+          HF_OIDC_RESOURCE: spaces/ozyjay/token-trail-backend
+        run: |
+          hf upload ozyjay/token-trail-backend "$RUNNER_TEMP/space-source" . \
+            --repo-type space \
+            --delete '*' \
+            --commit-message "Sync GitHub ${GITHUB_SHA::7}"
