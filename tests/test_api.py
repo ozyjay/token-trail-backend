@@ -116,3 +116,20 @@ def test_cors():
         )
         assert allowed.headers.get("access-control-allow-origin") == "https://crunchycodes.net"
         assert "access-control-allow-origin" not in denied.headers
+
+
+def test_trace_origin_is_enforced():
+    with client() as api:
+        allowed = api.post(
+            "/v1/traces",
+            json={"prompt": "x"},
+            headers={"Origin": "https://crunchycodes.net"},
+        )
+        denied = api.post(
+            "/v1/traces",
+            json={"prompt": "x"},
+            headers={"Origin": "https://unrelated.example"},
+        )
+        assert allowed.status_code == 200
+        assert denied.status_code == 403
+        assert denied.json()["error"]["code"] == "origin_not_allowed"

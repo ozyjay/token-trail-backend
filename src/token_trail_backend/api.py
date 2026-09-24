@@ -79,6 +79,9 @@ def create_app(
     @app.middleware("http")
     async def bound_body(request: Request, call_next):
         if request.method == "POST":
+            origin = request.headers.get("origin")
+            if origin is not None and origin not in settings.origins:
+                return error(403, "origin_not_allowed", "origin is not allowed")
             length = request.headers.get("content-length")
             if length is not None:
                 try:

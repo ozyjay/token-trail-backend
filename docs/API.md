@@ -22,6 +22,6 @@ A successful response contains `schema_version`, `model` (alias, repository, rev
 
 All displayed probabilities use `decoding.probability_basis: "raw_softmax_logits"` from the model's next-token logits at that step. Sampling uses temperature-adjusted logits and optional nucleus filtering. Alternatives remain ranked by raw probability, which makes distributions comparable across decoding settings. They need not sum to one because the full vocabulary is much larger.
 
-Errors have `{"error":{"code":"...","message":"..."}}`. Relevant statuses: `413 payload_too_large`, `422 invalid_request` or `prompt_too_long`, `429 busy` or `rate_limited`, `503 not_ready`, `504 timeout`, and `500 inference_failed`. A disconnected client may be represented as `499 client_disconnected` internally; browsers typically see a cancelled network request.
+Errors have `{"error":{"code":"...","message":"..."}}`. Relevant statuses: `403 origin_not_allowed`, `413 payload_too_large`, `422 invalid_request` or `prompt_too_long`, `429 busy` or `rate_limited`, `503 not_ready`, `504 timeout`, and `500 inference_failed`. A disconnected client may be represented as `499 client_disconnected` internally; browsers typically see a cancelled network request.
 
 No streaming endpoint is provided in v1. The entire bounded trace is returned after generation.
